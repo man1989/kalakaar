@@ -5,7 +5,14 @@ const bodyParser = require("koa-bodyparser");
 const mongoose = require("mongoose");
 const albumRouter = require("./routes/albums");
 
-mongoose.connect("mongodb://localhost/kalakaar");
+mongoose.connect(config.MONGODB_URI);
+let conn = mongoose.connection;
+conn.on("error", function(err){
+    console.error("fail to connect");
+});
+conn.on("open", function(err){
+    console.error("connected to mongodb");
+});
 
 let app = new Koa();
 let router = new Router({

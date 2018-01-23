@@ -6,12 +6,6 @@ const AlbumSchema = mongoose.Schema({
     tag:{
         type: String
     },
-    photos:[{
-        name: String,
-        location: String,
-        tag: String,
-        comments:[{}]
-    }],
     createDate: {type:Date, default: Date.now},
     modifiedDate: {type: Date, default: Date.now}
 });

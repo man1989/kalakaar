@@ -1,4 +1,4 @@
-const Album = require("../models/albums");
+const Album = require("../models/Album");
 const Router = require("koa-router");
 let router = new Router();
 

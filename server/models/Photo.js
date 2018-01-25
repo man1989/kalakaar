@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-let {Schema, Model} = mongoose;
+let {Schema, Model} = mongoose
 let PhotoSchema = new Schema({
     album_id: String,
     name: String,

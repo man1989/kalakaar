@@ -6,6 +6,7 @@ const AlbumSchema = mongoose.Schema({
     tag:{
         type: String
     },
+    parent_id: String,
     createDate: {type:Date, default: Date.now},
     modifiedDate: {type: Date, default: Date.now}
 });

@@ -35,9 +35,15 @@ let uploadImage = async (ctx, next) => {
 }
 
 let listImages = async (ctx, next) => {
-    let {id: album_id} = ctx.params;
-    let photos = await Photo.find({album_id: album_id});
-    ctx.body = photos;
+    try{
+        let {id: album_id} = ctx.params;
+        let photos = await Photo.find({album_id: album_id});
+        ctx.body = photos;
+        ctx.status=200;
+    }catch(err){
+        ctx.body = "no images found";
+        ctx.status = 404;
+    }
 };
 
 module.exports = {

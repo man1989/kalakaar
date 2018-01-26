@@ -33,7 +33,7 @@ let fetchAlbumById = async (ctx, next) => {
         ctx.body = data;
         ctx.status = 200;
         if(!data){
-            throw new Error("Album no found");
+            throw new Error("Album not found");
         }
     }catch(err){
         ctx.body = err.message;
@@ -48,7 +48,7 @@ let fetchAlbumByName = async (ctx, next) => {
         ctx.body = data;
         ctx.status = 200;
         if(!data){
-            throw new Error("Album no found");
+            throw new Error("Album not found");
         }
     }catch(err){
         ctx.body = err.message;
@@ -57,15 +57,18 @@ let fetchAlbumByName = async (ctx, next) => {
 };
 
 let updateAlbum = async (ctx, next) => {
-    let { id } = ctx.params;
-    let data = await Album.findById(id);
-    console.log(ctx.request.body);
-    Object.keys(ctx.request.body).forEach((key) => {
-        data[key] = ctx.request.body[key];
-    });
-    await data.update(data);
-    ctx.status = 204;
-    ctx.body = "updated";
+    try{
+        let { id } = ctx.params;
+        let data = await Album.findById(id);
+        Object.keys(ctx.request.body).forEach((key) => {
+            data[key] = ctx.request.body[key];
+        });
+        await data.update(data);
+        ctx.status = 204;
+    }catch(err){
+        ctx.body = "Fail to update";
+        ctx.status = 404;
+    }
 };
 
 module.exports = {
@@ -73,5 +76,5 @@ module.exports = {
     fetchAlbumById: fetchAlbumById,
     fetchAlbumByName: fetchAlbumByName,
     updateAlbum: updateAlbum,
-    createAlbum: createAlbum 
+    createAlbum: createAlbum
 }

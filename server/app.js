@@ -16,10 +16,12 @@ conn.on("open", function(err){
 });
 
 let app = new Koa();
-let router = new Router({
-    prefix: "/api/v1"
-});
+let router = new Router();
 app.use(bodyParser({multipart: true}));
+router.get("/", async(ctx, next)=>{
+    ctx.body="Currently in development";
+    ctx.status=200;
+});
 router.use(albumRouter.routes());
 router.use(photoRouter.routes());
 app.use(router.routes());

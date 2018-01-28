@@ -71,10 +71,16 @@ let updateAlbum = async (ctx, next) => {
     }
 };
 
+let deleteAlbum = async (ctx, next)=>{
+    let {id} = ctx.params;
+    await Album.remove({_id:id});
+    ctx.status = 200;
+}
 module.exports = {
     listAll: listAlbums,
     fetchAlbumById: fetchAlbumById,
     fetchAlbumByName: fetchAlbumByName,
     updateAlbum: updateAlbum,
-    createAlbum: createAlbum
+    createAlbum: createAlbum,
+    deleteAlbum: deleteAlbum
 }

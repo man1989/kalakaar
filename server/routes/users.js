@@ -3,6 +3,7 @@ const userHandler = require("../handlers/userHandler");
 let router = new Router();
 
 router.post("/user", userHandler.createUser)
-.get("/users", userHandler.listUsers);
+.get("/users", userHandler.listUsers)
+.post("/login", userHandler.userLogin);
 
 module.exports = router;

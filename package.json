@@ -11,6 +11,7 @@
         "test:coverage": "nyc --reporter=html --reporter=text mocha ./server/test/*"
     },
     "dependencies": {
+        "jsonwebtoken": "^8.1.1",
         "koa": "^2.4.1",
         "koa-body": "^2.5.0",
         "koa-router": "^7.3.0",

@@ -6,7 +6,8 @@ const mongoose = require("mongoose");
 const albumRouter = require("./routes/albums");
 const photoRouter = require("./routes/photos");
 const userRouter = require("./routes/users");
-
+const httpOverride = require("./middleware/httpOverride")
+const authorization = require("./middleware/authorization");
 mongoose.connect(config.MONGODB_URI);
 let conn = mongoose.connection;
 conn.on("error", function(err){
@@ -18,22 +19,16 @@ conn.on("open", function(err){
 
 let app = new Koa();
 let router = new Router();
-
-app.use(async (ctx, next)=>{
-    let overrideMethod = ctx.headers["x-http-method-override"];
-    if(ctx.method === "POST" && overrideMethod){
-        console.log("method override");
-        ctx.method = overrideMethod;
-    }    
-    await next();
-});
-
 app.use(bodyParser({multipart: true}));
+
+app.use(httpOverride);
 
 router.get("/", async(ctx, next)=>{
     ctx.body="Currently in development";
     ctx.status=200;
-})
+});
+
+router.use("/api/v1", authorization())
 .use(albumRouter.routes())
 .use(photoRouter.routes())
 .use(userRouter.routes());

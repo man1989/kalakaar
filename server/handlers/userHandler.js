@@ -1,4 +1,5 @@
-User = require("../models/User");
+const User = require("../models/User");
+const jwt = require("jsonwebtoken");
 
 let createUser = async (ctx, next)=>{
     let userObj = ctx.request.body;
@@ -14,6 +15,16 @@ let createUser = async (ctx, next)=>{
     }
 };
 
+let userLogin = async(ctx, next)=>{
+    let {username, password} = ctx.request.body;
+    let secretKey = process.env.SECRET_KEY;    
+    let token = jwt.sign({user: username}, secretKey, {expiresIn: 60*30});
+    ctx.body = {
+        tokenId:token 
+    }
+    ctx.status = 200;
+}
+
 let listUsers = async (ctx, body)=>{
     let users = await User.find();
     ctx.body = users;
@@ -26,5 +37,6 @@ let listUsers = async (ctx, body)=>{
 
 module.exports = {
     createUser: createUser,
-    listUsers: listUsers
+    listUsers: listUsers,
+    userLogin: userLogin
 }

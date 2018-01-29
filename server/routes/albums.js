@@ -1,8 +1,9 @@
 const albumHandler = require("../handlers/albumHandler");
 const Router = require("koa-router");
 let router = new Router();
-router.prefix("/api/v1");
+
 router.get("/albums", albumHandler.listAll);
+
 router.post("/album", albumHandler.createAlbum)
 .get("/album/:id", albumHandler.fetchAlbumById)
 .get("/album/name/:name",albumHandler.fetchAlbumByName)

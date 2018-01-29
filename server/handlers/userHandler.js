@@ -15,14 +15,19 @@ let createUser = async (ctx, next)=>{
     }
 };
 
-let userLogin = async(ctx, next)=>{
+let userLogin = async(ctx, next) => {
     let {username, password} = ctx.request.body;
-    let secretKey = process.env.SECRET_KEY;    
-    let token = jwt.sign({user: username}, secretKey, {expiresIn: 60*30});
-    ctx.body = {
-        tokenId:token 
+    let user = await User.findOne({username: username});
+    if(!user||!user.hasValidPassword(password)){
+        ctx.status = 400;
+    }else{
+        let secretKey = process.env.SECRET_KEY;    
+        let token = jwt.sign({user: username}, secretKey, {expiresIn: 60*30});
+        ctx.body = {
+            tokenId:token 
+        }
+        ctx.status = 200;
     }
-    ctx.status = 200;
 }
 
 let listUsers = async (ctx, body)=>{

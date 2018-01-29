@@ -6,11 +6,11 @@ let listAlbums = async (ctx, next)=>{
         ctx.body = albums;
         ctx.status = 200;
         if(!albums.length){
-            throw new Error("It seems you haven't created one");
+            ctx.status = 404
         }
     }catch(err){
-        ctx.body = err.message;
-        ctx.status = 404;
+        console.error(err);
+        ctx.status = 500;
     }
 };
 
@@ -30,14 +30,17 @@ let fetchAlbumById = async (ctx, next) => {
     try{
         let { id } = ctx.params;
         let data = await Album.findById({ _id: id });
-        ctx.body = data;
-        ctx.status = 200;
-        if(!data){
-            throw new Error("Album not found");
+        if(data){
+            ctx.body = data;
+            ctx.status = 200;    
+        }else{
+            ctx.body = {};
+            ctx.status = 404;
+    
         }
     }catch(err){
-        ctx.body = err.message;
-        ctx.status = 404;
+        console.error(err);
+        ctx.status = 500;
     }
 };
 
@@ -45,14 +48,16 @@ let fetchAlbumByName = async (ctx, next) => {
     try{
         let { name } = ctx.params;
         let data = await Album.findOne({ name: name });
-        ctx.body = data;
-        ctx.status = 200;
-        if(!data){
-            throw new Error("Album not found");
+        if(data){
+            ctx.body = data;
+            ctx.status = 200;
+        }else{
+            ctx.body = {};
+            ctx.status = 404;
         }
     }catch(err){
-        ctx.body = err.message;
-        ctx.status = 404;
+        console.error(err);
+        ctx.status = 500;
     }
 };
 

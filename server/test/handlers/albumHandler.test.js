@@ -2,7 +2,10 @@ const {expect} = require("chai");
 const {spy, stub} = require("sinon");
 const proxyquire = require("proxyquire");
 describe("handler for all album routes", ()=>{
-    let AlbumStub = stub();
+    let saveStub = spy();
+    let AlbumStub = function () {
+    }
+    AlbumStub.prototype.save = spy();
     AlbumStub.find = stub();
     AlbumStub.findById = stub();
     AlbumStub.findOne = stub();
@@ -18,14 +21,18 @@ describe("handler for all album routes", ()=>{
             next=spy();
         })
         it("list all the albums", async()=>{
-            AlbumStub.find.returns(["1", "2"]);
+            AlbumStub.find.resolves(["1", "2"]);
             await albumHandler.listAll(ctx, next);
             expect(ctx.status).to.equal(200);
+            expect(ctx.body.length).to.equal(2);
+            expect(ctx.body[0]).to.equal("1");
+            expect(ctx.body[1]).to.equal("2");
         });
         it("it will respond with 404, if no album found", async()=>{
-            AlbumStub.find.returns([]);
+            AlbumStub.find.resolves([]);
             await albumHandler.listAll(ctx, next);
             expect(ctx.status).to.equal(404);
+            expect(ctx.body.length).to.equal(0);
         });
     });
     describe(".fetchAlbumById()", ()=>{
@@ -39,17 +46,20 @@ describe("handler for all album routes", ()=>{
             next=spy();
         })
         it("fetch the album by its Id", async()=>{
-            AlbumStub.findById.returns({
+            AlbumStub.findById.resolves({
                 id:"123",
                 name:"test"
             });
             await albumHandler.fetchAlbumById(ctx, next);
             expect(ctx.status).to.equal(200);
+            expect(ctx.body.id).to.equal("123");
+            expect(ctx.body.name).to.equal("test");
         });
         it("it will respond with 404, if no album found", async()=>{
-            AlbumStub.findById.returns(null);
+            AlbumStub.findById.resolves(null);
             await albumHandler.fetchAlbumById(ctx, next);
             expect(ctx.status).to.equal(404);
+            expect(ctx.body).to.deep.equal({});
         });        
     });
     describe(".fetchAlbumByName()", ()=>{
@@ -63,7 +73,7 @@ describe("handler for all album routes", ()=>{
             next=spy();
         });
         it("fetch the album by its name", async()=>{
-            AlbumStub.findOne.returns({
+            AlbumStub.findOne.resolves({
                 id:"123",
                 name:"test"
             });
@@ -71,7 +81,7 @@ describe("handler for all album routes", ()=>{
             expect(ctx.status).to.equal(200);
         });
         it("it will respond with 404, if no album found", async()=>{
-            AlbumStub.findOne.returns(null);
+            AlbumStub.findOne.resolves(null);
             await albumHandler.fetchAlbumByName(ctx, next);
             expect(ctx.status).to.equal(404);
         });             
@@ -130,15 +140,13 @@ describe("handler for all album routes", ()=>{
             };
             next=spy();
         });        
-        it("will return status 200 on creation of album", async()=>{
-            AlbumStub.callsFake(obj=>obj);
+        it("will return status 201 on creation of album", async()=>{
             await albumHandler.createAlbum(ctx, next);
-            expect(ctx.request.body.save.called).to.equal(true);
+            expect(AlbumStub.prototype.save.called).to.equal(true);
             expect(ctx.status).to.equal(201);
         });
         it("in case of error it will return 500 as status code", async ()=>{
-            ctx.request.body.save = stub().throws();
-            AlbumStub.callsFake(obj=>obj);
+            AlbumStub.prototype.save = stub().rejects()
             await albumHandler.createAlbum(ctx, next);
             expect(ctx.status).to.equal(500);  
         });

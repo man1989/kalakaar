@@ -4,6 +4,6 @@ let router = new Router();
 
 router.post("/user", userHandler.createUser)
 .get("/users", userHandler.listUsers)
-.post("/login", userHandler.userLogin);
+.post("/user/login", userHandler.userLogin);
 
 module.exports = router;

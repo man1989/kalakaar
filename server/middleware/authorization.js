@@ -1,8 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-let skipRoutes
 module.exports = function(){
-    return async (ctx, next)=>{
+    return async (ctx, next) => {
         try{
             let {username, password} = ctx.headers;
             let {authorization} = ctx.headers;

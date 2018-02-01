@@ -1,5 +1,5 @@
 const util = require("util");
-const { rename } = require("fs");
+const { rename, copyFileSync } = require("fs");
 const f_helper = require("../helpers/file");
 const Photo = require("../models/Photo")
 let f_rename = util.promisify(rename);
@@ -24,7 +24,7 @@ let uploadImage = async (ctx, next) => {
     try {
         if(!tempPath) throw new Error("no file specified");
         let dirPath = await f_helper.obtainDirectory(__dirname, "../../photos");
-        await f_rename(tempPath, `${dirPath}/${name}`);
+        copyFileSync(tempPath, `${dirPath}/${name}`);
         let photo = await saveToDB(ctx, dirPath);
         ctx.body = photo;
         ctx.status = 201;

@@ -4,6 +4,9 @@
     "author": "Manish, Kumar<manish.sep1989@gmail.com>",
     "description": "Photo editing app",
     "license": "MIT",
+    "engines": {
+        "node": "8.9.4"
+    },
     "scripts": {
         "start": "node ./server/app.js",
         "start:watch": "nodemon ./server/app.js",

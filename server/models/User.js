@@ -27,7 +27,7 @@ let getSalt = function(){
 userSchema.methods.hasValidPassword = function(password){
     let {password: savedPassword, salt} = this;
     let hashObj = getHashPassword(password, salt);
-    return crypto.timingSafeEqual(hashObj.password, savedPassword);
+    return crypto.timingSafeEqual(Buffer.from(hashObj.password), Buffer.from(savedPassword));
 };
 
 userSchema.statics.userExists = async function (user){

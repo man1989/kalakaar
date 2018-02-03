@@ -4,11 +4,10 @@ module.exports = function(){
     return async (ctx, next) => {
         try{
             let {username, password} = ctx.headers;
-            let {authorization} = ctx.headers;
-            if(!authorization) throw new Error("Not Authorized");
-            let token = authorization.split(" ")[1];
-            let secretKey = process.env.SECRET_KEY; ;            
-            let result = jwt.verify(token, secretKey);
+            let accessToken = ctx.headers["x-access-token"];
+            if(!accessToken) throw new Error("Not Authorized");
+            let secretKey = process.env.SECRET_KEY;
+            let result = jwt.verify(accessToken, secretKey);
             ctx.status=200;
             return next();
         }catch(err){
